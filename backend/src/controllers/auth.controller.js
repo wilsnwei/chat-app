@@ -1,6 +1,4 @@
-import express from "express";
 import bcrypt from "bcryptjs";
-import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import { generateToken } from "../lib/utils.js";
 
