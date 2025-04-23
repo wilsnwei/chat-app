@@ -86,7 +86,8 @@ export default class AuthControllers {
 
   static updateProfile = async (req, res) => {
     try {
-
+      const { profilePic } = req.body
+      req
     } catch (error) {
       console.log("Error in log out controller", error);
     }
