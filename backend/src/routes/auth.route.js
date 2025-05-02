@@ -12,4 +12,6 @@ authRouter.post("/logout", authControllers.logout);
 
 authRouter.put("/update-profile", protectRoute, authControllers.updateProfile);
 
+authRouter.get("check", protectRoute, authControllers.check);
+
 export default authRouter;
