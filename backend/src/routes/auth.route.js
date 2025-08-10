@@ -1,17 +1,17 @@
 import express from "express";
-import authControllers from "../controllers/auth.controller.js";
+import AuthController from "../controllers/auth.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/signup", authControllers.signUp);
+authRouter.post("/signup", AuthController.signUp);
 
-authRouter.post("/login", authControllers.login);
+authRouter.post("/login", AuthController.login);
 
-authRouter.post("/logout", authControllers.logout);
+authRouter.post("/logout", AuthController.logout);
 
-authRouter.put("/update-profile", protectRoute, authControllers.updateProfile);
+authRouter.put("/update-profile", protectRoute, AuthController.updateProfile);
 
-authRouter.get("check", protectRoute, authControllers.check);
+authRouter.get("/check", protectRoute, AuthController.check);
 
 export default authRouter;

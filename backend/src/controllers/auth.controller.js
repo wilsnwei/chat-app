@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import { generateToken } from "../lib/utils.js";
-import cloudinary from "../lib/cloudinary.js";
+import { cloudinary } from "../lib/cloudinary.js";
 
-export default class AuthControllers {
+export default class AuthController {
   static signUp = async (req, res) => {
     const { fullName, email, password } = req.body;
     try {
