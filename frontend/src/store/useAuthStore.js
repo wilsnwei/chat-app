@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 export const useAuthStore = create((set) => ({
   authUser: null,
   isLogginIn: false,
-  isUpdatingProfile: false,
   isCheckingAuth: true,
 
   checkAuth: async () => {
@@ -48,10 +47,14 @@ export const useAuthStore = create((set) => ({
   },
   updateProfile: async (data) => {
     try {
-      const res = await axiosInstance.post("/auth/update-profile", data)
+      const res = await axiosInstance.put("/auth/update-profile", data, {
+        headers: {"Content-Type": "multipart/form-data"}
+      })
       set({authUser: res.data})
+      toast.success("Profile updated successfully")
     } catch (error) {
-      
+      console.log(error)
+      toast.error(error.response.data.message)
     }
   }
 }));

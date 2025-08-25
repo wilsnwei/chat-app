@@ -9,8 +9,13 @@ const Navbar = () => {
     console.log("login");
   };
   return (
-    <div>
-      <button onClick={() => (!authUser ? login() : logout())}>
+    <div className="flex gap-3 justify-evenly text-xl">
+      <button>{<Link to="/profile">Profile</Link>}</button>
+      <button>{<Link to="/settings">Settings</Link>}</button>
+      <button
+        style={{ cursor: "pointer" }}
+        onClick={() => (!authUser ? login() : logout())}
+      >
         {!authUser ? <Link to="/login">Login</Link> : "Logout"}
       </button>
     </div>

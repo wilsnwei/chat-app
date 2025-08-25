@@ -1,29 +1,33 @@
 import { useForm } from "react-hook-form";
 import { useAuthStore } from "../store/useAuthStore";
-import { Eye, EyeOff, MessageSquare, UserRoundPen } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Camera, Mail, User, UserRoundPen } from "lucide-react";
+import { useState } from "react";
 
 const ProfilePage = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const authUser = useAuthStore((state) => state.authUser);
+  const updateProfile = useAuthStore((state) => state.updateProfile);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    getValues,
+    formState: { isSubmitting },
   } = useForm();
 
   const onSubmit = async (data) => {
-    await signup(data);
+    const file = data.image[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profilePic", file);
+
+    setSelectedImage(URL.createObjectURL(file));
+    await updateProfile(formData);
   };
   return (
     <div className="min-h-screen">
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {/* create account and icon section */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div
@@ -37,47 +41,56 @@ const ProfilePage = () => {
             </div>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-3">
-              <div className="rounded-md outline-2 outline-fuchsia-200 p-3">
-                <label htmlFor="profile-upload" className="label">
-                  <span className="label-text font-medium">Upload Profile Photo</span>
-                </label>
+            <div className="rounded-md outline-2 outline-fuchsia-200 p-3 text-center">
+              <label htmlFor="profile-upload" className="label">
+                <div className="relative">
+                  <Camera className="absolute bottom-5 w-10 h-10 p-2 right-10 rounded-full bg-gray-600" />
+                  <img
+                    src={selectedImage || authUser.profilePic || "/avatar.png"}
+                    className="size-64 rounded-full object-cover border-3 "
+                    alt="avatar"
+                  />
+                </div>
                 <input
+                  {...register("image", {
+                    onChange: (e) => {
+                      const file = e.target.files[0];
+                      if (!file) return;
+
+                      const reader = new FileReader();
+                      reader.onloadend = () => setSelectedImage(reader.result); // update preview
+                      reader.readAsDataURL(file);
+                    },
+                  })}
                   type="file"
                   id="profile-upload"
-                  placeholder={authUser.fullName}
-                  className="w-full"
+                  className="hidden"
+                  disabled={isSubmitting}
                 />
-              </div>
+              </label>
+            </div>
+            <div className="space-y-3">
               <div>
                 <label className="label">
+                  <User />
                   <span className="label-text font-medium">Full Name</span>
                 </label>
-                <input
-                  type="text"
-                  placeholder={authUser.fullName}
-                  className="input w-full"
-                  disabled
-                />
+                <div className="input w-full">{authUser?.fullName}</div>
               </div>
               <div>
                 <label className="label">
+                  <Mail />
                   <span className="label-text font-medium">Email</span>
                 </label>
-                <input
-                  type="text"
-                  placeholder={authUser.email}
-                  className="input w-full"
-                  disabled
-                />
+                <div className="input w-full">{authUser?.email}</div>
               </div>
               <div className="flex flex-col justify-center mt-5">
                 <button
                   type="submit"
-                  className="btn bg-blue-700"
+                  className="btn bg-purple-300"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Saving..." : "Save"}
+                  {isSubmitting ? "Saving..." : "Save Changes"}
                 </button>
               </div>
             </div>

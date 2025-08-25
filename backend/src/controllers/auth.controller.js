@@ -87,15 +87,15 @@ export default class AuthController {
 
   static updateProfile = async (req, res) => {
     try {
-      const { profilePic } = req.body;
+      const file = req.file;
       const userId = req.user._id;
 
-      if (!profilePic)
+      if (!file)
         return res
           .status(400)
           .json({ message: "Profile picture not provided" });
 
-      const uploadResponse = await cloudinary.uploader.upload(profilePic);
+      const uploadResponse = await cloudinary.uploader.upload(file.path);
 
       const updatedUser = await User.findByIdAndUpdate(
         userId,
@@ -105,9 +105,7 @@ export default class AuthController {
         { new: true }
       );
 
-      return res
-        .status(200)
-        .json({ message: "Profile picture updated successfully", updatedUser });
+      return res.status(200).json(updatedUser);
     } catch (error) {
       console.log("Error in log out controller", error);
       return res.status(500).json({ message: "Internal server error" });
