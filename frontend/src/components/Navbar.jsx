@@ -10,8 +10,15 @@ const Navbar = () => {
   };
   return (
     <div className="flex gap-3 justify-evenly text-xl">
-      <button>{<Link to="/profile">Profile</Link>}</button>
-      <button>{<Link to="/settings">Settings</Link>}</button>
+      <button>
+        <Link to="/">Home</Link>
+      </button>
+      <button>
+        <Link to="/profile">Profile</Link>
+      </button>
+      <button>
+        <Link to="/settings">Settings</Link>
+      </button>
       <button
         style={{ cursor: "pointer" }}
         onClick={() => (!authUser ? login() : logout())}

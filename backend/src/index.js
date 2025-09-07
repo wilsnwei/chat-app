@@ -6,10 +6,9 @@ import cookieParser from "cookie-parser";
 import { cloudinaryConfig } from "./lib/cloudinary.js";
 import messageRouter from "./routes/message.route.js";
 import cors from "cors";
+import { app, server } from "./lib/socket.js";
 
 dotenv.config();
-
-const app = express();
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
@@ -22,13 +21,13 @@ app.use(
 );
 
 app.use("/api/auth", authRouter);
-app.use("/api/message", messageRouter);
+app.use("/api/messages", messageRouter);
 
 cloudinaryConfig();
 
 const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   connectDB();
 });

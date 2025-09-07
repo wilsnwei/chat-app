@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, Mail, User, UserRoundPen } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
   const authUser = useAuthStore((state) => state.authUser);
@@ -16,7 +17,10 @@ const ProfilePage = () => {
 
   const onSubmit = async (data) => {
     const file = data.image[0];
-    if (!file) return;
+    if (!file || !file.type.startsWith("image/")) {
+      toast.error("Please select an image");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("profilePic", file);
@@ -55,10 +59,12 @@ const ProfilePage = () => {
                   {...register("image", {
                     onChange: (e) => {
                       const file = e.target.files[0];
-                      if (!file) return;
-
+                      if (!file || !file.type.startsWith("image/")) {
+                        toast.error("Please select an image");
+                        return;
+                      }
                       const reader = new FileReader();
-                      reader.onloadend = () => setSelectedImage(reader.result); // update preview
+                      reader.onloadend = () => setSelectedImage(reader.result);
                       reader.readAsDataURL(file);
                     },
                   })}
